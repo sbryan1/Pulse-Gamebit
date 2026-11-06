@@ -119,6 +119,154 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &171438708
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 171438710}
+  - component: {fileID: 171438709}
+  m_Layer: 0
+  m_Name: CpatureFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &171438709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 171438708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbf0639f02a0744e5b7a884bff35a571, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CapturePulse
+  shockwaveMaterial: {fileID: 2100000, guid: e563862f13f2c48118318f43d322a1f2, type: 2}
+  shockwaveSize: 4
+  shockwaveDuration: 0.55
+  surfaceOffset: 0.01
+  boardNormal: {x: 0, y: 0, z: -1}
+  sortingLayerName: CaptureFX
+  sortingOrder: 1000
+  radiusOverTime:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 3
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  fadeOverTime:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.6
+      value: 0.85
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  pulseVolume: {fileID: 0}
+  pulseDuration: 0.35
+  pulseWeight:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.12
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  cameraTransform: {fileID: 0}
+  punchDistance: 0.12
+  punchDuration: 0.2
+  debugLog: 1
+  testTarget: {fileID: 0}
+--- !u!4 &171438710
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 171438708}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 889, y: 421, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &206802765
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,8 +296,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3389faa3bdb654110b336cbe299f63c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameController
-  engine: {fileID: 2072898902}
-  pieces: {fileID: 360069411}
+  engine: {fileID: 0}
+  pieces: {fileID: 0}
   board: {fileID: 680681855}
   menuSceneName: MainMenu
   skillLevel: 10
@@ -173,71 +321,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 448571943}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &360069409
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 360069410}
-  - component: {fileID: 360069411}
-  m_Layer: 0
-  m_Name: PieceManager (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &360069410
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 360069409}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1496450742}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &360069411
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 360069409}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6282617e9b7c9447bab606015ed9ec40, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PieceManager
-  board: {fileID: 680681855}
-  pieceSprites:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  whiteColor: {r: 0.97, g: 0.97, b: 0.95, a: 1}
-  blackColor: {r: 0.12, g: 0.12, b: 0.12, a: 1}
-  slideTime: 0.16
-  lightningCaptures: 1
-  whiteBoltColor: {r: 0.15686275, g: 0.9411765, b: 1, a: 1}
-  blackBoltColor: {r: 1, g: 0.15686275, b: 0.78431374, a: 1}
-  spriteFolder: NeonPieces
 --- !u!1 &448571942
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,6 +331,7 @@ GameObject:
   m_Component:
   - component: {fileID: 448571943}
   - component: {fileID: 448571944}
+  - component: {fileID: 448571945}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -283,8 +367,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6241b8c7484c54bf3bee42b38854bea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameController
-  engine: {fileID: 1690170747}
-  pieces: {fileID: 360069411}
+  engine: {fileID: 0}
+  pieces: {fileID: 0}
+  board: {fileID: 0}
+  menuSceneName: MainMenu
+  skillLevel: 10
+  moveTimeMs: 1000
+  engineDelay: 0.3
+  moveSound: {fileID: 0}
+  captureSound: {fileID: 0}
+  volume: 0.8
+--- !u!114 &448571945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 448571942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3389faa3bdb654110b336cbe299f63c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameController
+  engine: {fileID: 1690170748}
+  pieces: {fileID: 0}
   board: {fileID: 680681855}
   menuSceneName: MainMenu
   skillLevel: 10
@@ -548,6 +654,7 @@ GameObject:
   m_Component:
   - component: {fileID: 680681854}
   - component: {fileID: 680681855}
+  - component: {fileID: 680681856}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -567,8 +674,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 799890828}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &680681855
@@ -587,48 +693,16 @@ MonoBehaviour:
   darkColor: {r: 0.05490196, g: 0.05490196, b: 0.10980392, a: 1}
   squareSize: 1
   backgroundColor: {r: 0.09803922, g: 0.09803922, b: 0.24705882, a: 1}
---- !u!1 &799890827
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 799890828}
-  - component: {fileID: 799890829}
-  m_Layer: 0
-  m_Name: BoardWave
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &799890828
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 799890827}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 680681854}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &799890829
+--- !u!114 &680681856
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 799890827}
+  m_GameObject: {fileID: 680681853}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc96870369f8d4616a22f7cdbbb7eaba, type: 3}
+  m_Script: {fileID: 11500000, guid: 392c437595b254a8c8b6aac957b98438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoardWave
   tiltAngle: 28
@@ -641,6 +715,77 @@ MonoBehaviour:
   shading: 0.28
   crestGlow: {r: 0.15686275, g: 0.9411765, b: 1, a: 1}
   crestGlowStrength: 0.3
+  rippleSpeed: 10
+  rippleWidth: 0.8
+  rippleHeight: 2.5
+  rippleLife: 0.8
+  rippleGlow: {r: 1, g: 0.15686275, b: 0.78431374, a: 1}
+  rippleGlowStrength: 0.75
+--- !u!1 &792463949
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 792463951}
+  - component: {fileID: 792463950}
+  m_Layer: 0
+  m_Name: PieceManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &792463950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 792463949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b961177b19061418ba801fd50ce3f6f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceManager
+  board: {fileID: 0}
+  pieceSprites:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  whiteColor: {r: 0.97, g: 0.97, b: 0.95, a: 1}
+  blackColor: {r: 0.12, g: 0.12, b: 0.12, a: 1}
+  slideTime: 0.16
+  lightningCaptures: 1
+  whiteBoltColor: {r: 0.15686275, g: 0.9411765, b: 1, a: 1}
+  blackBoltColor: {r: 1, g: 0.15686275, b: 0.78431374, a: 1}
+  spriteFolder: NeonPieces
+--- !u!4 &792463951
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 792463949}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 889, y: 421, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1496450742}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1496450741
 GameObject:
   m_ObjectHideFlags: 0
@@ -671,7 +816,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 360069410}
+  - {fileID: 792463951}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1496450743
@@ -683,19 +828,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 1496450741}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6241b8c7484c54bf3bee42b38854bea8, type: 3}
+  m_Script: {fileID: 11500000, guid: b961177b19061418ba801fd50ce3f6f3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameController
-  engine: {fileID: 1690170747}
-  pieces: {fileID: 360069411}
+  m_EditorClassIdentifier: Assembly-CSharp::PieceManager
   board: {fileID: 680681855}
-  menuSceneName: MainMenu
-  skillLevel: 10
-  moveTimeMs: 1000
-  engineDelay: 0.3
-  moveSound: {fileID: 0}
-  captureSound: {fileID: 0}
-  volume: 0.8
+  pieceSprites:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  whiteColor: {r: 0.97, g: 0.97, b: 0.95, a: 1}
+  blackColor: {r: 0.12, g: 0.12, b: 0.12, a: 1}
+  slideTime: 0.16
+  lightningCaptures: 1
+  whiteBoltColor: {r: 0.15686275, g: 0.9411765, b: 1, a: 1}
+  blackBoltColor: {r: 1, g: 0.15686275, b: 0.78431374, a: 1}
+  spriteFolder: NeonPieces
 --- !u!1 &1690170745
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,8 +861,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1690170746}
-  - component: {fileID: 1690170747}
-  - component: {fileID: 1690170749}
   - component: {fileID: 1690170748}
   m_Layer: 0
   m_Name: Engine
@@ -731,18 +885,6 @@ Transform:
   - {fileID: 2072898903}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1690170747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1690170745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36221b71a7ad14e128f16f5e32d0c6d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StockfishEngine
 --- !u!114 &1690170748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -755,18 +897,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d79f584b278249ef959b704afbd6e64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StockfishEngine
---- !u!114 &1690170749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1690170745}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d79f584b278249ef959b704afbd6e64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StockfishEngine
+  debugLog: 1
 --- !u!1 &2072898901
 GameObject:
   m_ObjectHideFlags: 0
@@ -776,7 +907,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2072898903}
-  - component: {fileID: 2072898902}
   m_Layer: 0
   m_Name: StockfishEngine
   m_TagString: Untagged
@@ -784,18 +914,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2072898902
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2072898901}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d79f584b278249ef959b704afbd6e64, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StockfishEngine
 --- !u!4 &2072898903
 Transform:
   m_ObjectHideFlags: 0
@@ -821,3 +939,4 @@ SceneRoots:
   - {fileID: 448571943}
   - {fileID: 680681854}
   - {fileID: 1496450742}
+  - {fileID: 171438710}

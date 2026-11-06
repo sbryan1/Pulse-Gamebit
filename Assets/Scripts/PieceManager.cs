@@ -163,6 +163,10 @@ public class PieceManager : MonoBehaviour
 
     void Zap(GameObject victim, GameObject attacker)
     {
+        // Capture pulse: shockwave + camera kick centred on the captured piece.
+        // victim.name starts with the piece letter (e.g. "q_d8"), so a queen hits harder than a pawn.
+        CapturePulse.Instance?.Play(victim.transform.position, CapturePulse.StrengthFor(victim.name[0]));
+
         if (!lightningCaptures) { Destroy(victim); return; }
         bool whiteAttacks = char.IsUpper(attacker.name[0]);
         LightningZap.Strike(attacker.transform.position, victim,

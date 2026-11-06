@@ -31,6 +31,29 @@ public class BoardWave : MonoBehaviour
     public Color crestGlow = new Color32(40, 240, 255, 255);
     [Range(0f, 1f)] public float crestGlowStrength = 0.3f;
 
+    [Header("Capture shockwave")]
+    [Tooltip("How fast the capture shockwave spreads, in squares per second.")]
+    public float rippleSpeed = 10f;
+    [Tooltip("Thickness of the shockwave crest, in squares.")]
+    public float rippleWidth = 0.8f;
+    [Tooltip("How high the shockwave lifts squares and pieces, compared with the normal wave.")]
+    public float rippleHeight = 2.5f;
+    [Tooltip("Seconds until the shockwave has faded out.")]
+    public float rippleLife = 0.8f;
+    public Color rippleGlow = new Color32(255, 40, 200, 255);
+    [Range(0f, 1f)] public float rippleGlowStrength = 0.75f;
+
+    struct Ripple { public Vector2 center; public float start, strength; }
+    readonly List<Ripple> ripples = new();
+    float lastRipple; // shockwave amount at the last position Height() looked at
+
+    /// <summary>Sends a shockwave through the board from a world position. Called by CapturePulse.</summary>
+    public static void AddRipple(Vector3 worldPos, float strength = 1f)
+    {
+        if (active == null || !active.isActiveAndEnabled) return;
+        active.ripples.Add(new Ripple { center = worldPos, start = Time.time, strength = strength });
+    }
+
     BoardGenerator board;
     PieceManager pieces;
     Transform markers;
@@ -96,6 +119,10 @@ public class BoardWave : MonoBehaviour
 
         float time = Time.time;
 
+        // Drop finished shockwaves (backwards loop, no garbage).
+        for (int i = ripples.Count - 1; i >= 0; i--)
+            if (time - ripples[i].start > rippleLife) ripples.RemoveAt(i);
+
         // Index loops instead of foreach: foreach over a Transform creates garbage
         // every frame, which causes stutters on phones.
 
@@ -145,7 +172,32 @@ public class BoardWave : MonoBehaviour
 
         float rings = Mathf.Sin(Mathf.Sqrt(x * x + y * y) * k - time * speed);
         float rolls = Mathf.Sin((x * 0.8f + y * 0.6f) * k - time * speed * 0.7f);
-        return Mathf.Lerp(rings, rolls, diagonalMix);
+        lastRipple = ripples.Count > 0 ? RippleAt(x, y, time) : 0f;
+        return Mathf.Lerp(rings, rolls, diagonalMix) + lastRipple * rippleHeight;
+    }
+
+    // Sum of all capture shockwaves at a point (x, y in squares).
+    float RippleAt(float x, float y, float time)
+    {
+        float s = board.squareSize;
+        float total = 0f;
+        for (int i = 0; i < ripples.Count; i++)
+        {
+            var r = ripples[i];
+            float age = time - r.start;
+            if (age < 0f || age > rippleLife) continue;
+
+            float dx = x - r.center.x / s, dy = y - r.center.y / s;
+            float d = Mathf.Sqrt(dx * dx + dy * dy);
+            float front = age * rippleSpeed;                         // ring radius, in squares
+            float k = (d - front) / Mathf.Max(0.05f, rippleWidth);
+            float crest = Mathf.Exp(-k * k);                         // smooth bump on the ring
+            float u = age / rippleLife;
+            float fade = (1f - u) * (1f - u);
+            float falloff = 1f / (1f + d * 0.25f);                   // strongest near the capture
+            total += crest * fade * falloff * r.strength;
+        }
+        return total;
     }
 
     void Shade(Transform sq, float h)
@@ -160,9 +212,11 @@ public class BoardWave : MonoBehaviour
             squareColors[sr] = baseColor;
         }
 
-        float light = 1f + h * shading;
+        float hw = Mathf.Clamp(h, -1f, 1f); // keep normal shading in range; the shockwave glows separately
+        float light = 1f + hw * shading;
         Color c = new Color(baseColor.r * light, baseColor.g * light, baseColor.b * light, baseColor.a);
-        c = Color.Lerp(c, crestGlow, Mathf.Max(0f, h) * crestGlowStrength);
+        c = Color.Lerp(c, crestGlow, Mathf.Max(0f, hw) * crestGlowStrength);
+        c = Color.Lerp(c, rippleGlow, Mathf.Clamp01(lastRipple * rippleGlowStrength));
         c.a = baseColor.a;
         sr.color = c;
     }
