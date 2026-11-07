@@ -367,16 +367,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6241b8c7484c54bf3bee42b38854bea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameController
-  engine: {fileID: 0}
-  pieces: {fileID: 0}
-  board: {fileID: 0}
-  menuSceneName: MainMenu
-  skillLevel: 10
-  moveTimeMs: 1000
-  engineDelay: 0.3
-  moveSound: {fileID: 0}
-  captureSound: {fileID: 0}
-  volume: 0.8
 --- !u!114 &448571945
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -786,6 +776,62 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1496450742}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1128692803
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1128692804}
+  - component: {fileID: 1128692805}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1128692804
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128692803}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 889, y: 421, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1128692805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128692803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 093fb6ed2e763485bb649cdf272851e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PulseGambit.Settings.NeonSettingsMenu
+  showCornerButton: 1
+  buttonCorner: 0
+  buttonMargin: {x: 36, y: 36}
+  font: {fileID: 0}
+  primary: {r: 0, g: 0.95, b: 1, a: 1}
+  accent: {r: 1, g: 0.16, b: 0.82, a: 1}
+  offColor: {r: 0.42, g: 0.38, b: 0.58, a: 1}
+  panelColor: {r: 0.035, g: 0.015, b: 0.09, a: 0.97}
+  sortingOrder: 500
+  closeOnEscape: 1
+  openWithEscape: 0
+  pauseTimeWhileOpen: 0
 --- !u!1 &1496450741
 GameObject:
   m_ObjectHideFlags: 0
@@ -852,6 +898,52 @@ MonoBehaviour:
   whiteBoltColor: {r: 0.15686275, g: 0.9411765, b: 1, a: 1}
   blackBoltColor: {r: 1, g: 0.15686275, b: 0.78431374, a: 1}
   spriteFolder: NeonPieces
+--- !u!1 &1578893610
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1578893612}
+  - component: {fileID: 1578893611}
+  m_Layer: 0
+  m_Name: AudioChannelBinder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1578893611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578893610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff1044c29423a433faf5e8bd39c9ff30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PulseGambit.Settings.AudioChannelBinder
+  channel: 0
+  sources: []
+--- !u!4 &1578893612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578893610}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 889, y: 421, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1690170745
 GameObject:
   m_ObjectHideFlags: 0
@@ -940,3 +1032,5 @@ SceneRoots:
   - {fileID: 680681854}
   - {fileID: 1496450742}
   - {fileID: 171438710}
+  - {fileID: 1128692804}
+  - {fileID: 1578893612}
