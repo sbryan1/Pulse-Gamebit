@@ -51,6 +51,7 @@ public class GameController : MonoBehaviour
     readonly List<GameObject> dots = new();
     Sprite squareSprite, dotSprite;
     Text status;
+    CanvasScaler hudScaler;
 
     bool WhiteToMove => moves.Count % 2 == 0;
     bool PlayerToMove => WhiteToMove == PlayerIsWhite;
@@ -60,9 +61,9 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        if (board == null) board = FindFirstObjectByType<BoardGenerator>();
-        if (pieces == null) pieces = FindFirstObjectByType<PieceManager>();
-        if (engine == null) engine = FindFirstObjectByType<StockfishEngine>();
+        if (board == null) board = FindAnyObjectByType<BoardGenerator>();
+        if (pieces == null) pieces = FindAnyObjectByType<PieceManager>();
+        if (engine == null) engine = FindAnyObjectByType<StockfishEngine>();
 
         // Status text first, so any problem below can be shown on screen.
         BuildHud();
@@ -77,6 +78,10 @@ public class GameController : MonoBehaviour
         lastFromMarker = MakeMarker(squareSprite, new Color(Lavender.r, Lavender.g, Lavender.b, 0.3f), 1f, 1);
         lastToMarker   = MakeMarker(squareSprite, new Color(Lavender.r, Lavender.g, Lavender.b, 0.3f), 1f, 1);
         SetupAudio();
+
+        // Captured pieces shown beside the board. Added automatically if not in the scene.
+        if (FindAnyObjectByType<CapturedPiecesDisplay>() == null)
+            gameObject.AddComponent<CapturedPiecesDisplay>();
 
         pieces.LoadFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
@@ -382,10 +387,8 @@ public class GameController : MonoBehaviour
     {
         var canvasGo = new GameObject("HUD", typeof(Canvas), typeof(CanvasScaler));
         canvasGo.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-        var scaler = canvasGo.GetComponent<CanvasScaler>();
-        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920, 1080);
-        scaler.matchWidthOrHeight = 1f;
+        hudScaler = canvasGo.GetComponent<CanvasScaler>();
+        hudScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
 
         var go = new GameObject("Status", typeof(RectTransform));
         go.transform.SetParent(canvasGo.transform, false);
@@ -393,8 +396,6 @@ public class GameController : MonoBehaviour
         rt.anchorMin = new Vector2(0, 1);
         rt.anchorMax = new Vector2(1, 1);
         rt.pivot = new Vector2(0.5f, 1);
-        rt.anchoredPosition = new Vector2(0, -20);
-        rt.sizeDelta = new Vector2(0, 80);
 
         status = go.AddComponent<Text>();
         status.font = Resources.Load<Font>("Menu/MenuFont");
@@ -404,6 +405,35 @@ public class GameController : MonoBehaviour
         status.horizontalOverflow = HorizontalWrapMode.Overflow;
         status.raycastTarget = false;
         go.AddComponent<Outline>().effectDistance = new Vector2(2, -2);
+
+        ApplyHudLayout();
+        ScreenLayout.Changed += ApplyHudLayout;
+    }
+
+    void OnDestroy() => ScreenLayout.Changed -= ApplyHudLayout;
+
+    // Landscape: one line across the top. Portrait: sized to the screen's width, wrapped
+    // onto two lines if needed, and moved down clear of the Settings button.
+    void ApplyHudLayout()
+    {
+        if (status == null || hudScaler == null) return;
+        var rt = status.rectTransform;
+        if (ScreenLayout.IsPortrait)
+        {
+            hudScaler.referenceResolution = new Vector2(1080, 1920);
+            hudScaler.matchWidthOrHeight = 0f; // keep the full width
+            rt.anchoredPosition = new Vector2(0, -130);
+            rt.sizeDelta = new Vector2(-60, 120);
+            status.horizontalOverflow = HorizontalWrapMode.Wrap;
+        }
+        else
+        {
+            hudScaler.referenceResolution = new Vector2(1920, 1080);
+            hudScaler.matchWidthOrHeight = 1f;
+            rt.anchoredPosition = new Vector2(0, -20);
+            rt.sizeDelta = new Vector2(0, 80);
+            status.horizontalOverflow = HorizontalWrapMode.Overflow;
+        }
     }
 
     void SetStatus(string text, Color color)

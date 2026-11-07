@@ -28,6 +28,11 @@ public class PieceManager : MonoBehaviour
 
     readonly Dictionary<GameObject, Coroutine> slides = new();
 
+    // Fired when a piece is captured: its letter (e.g. 'q' = black queen) and where it stood.
+    public event System.Action<char, Vector3> OnPieceCaptured;
+    // Fired when the board is cleared (new game / LoadFen).
+    public event System.Action OnCleared;
+
     readonly Dictionary<string, GameObject> pieces = new();
     Sprite circleSprite;
     Font font;
@@ -43,7 +48,7 @@ public class PieceManager : MonoBehaviour
 
     void Awake()
     {
-        if (board == null) board = FindFirstObjectByType<BoardGenerator>();
+        if (board == null) board = FindAnyObjectByType<BoardGenerator>();
 
         circleSprite = MakeCircleSprite(64);
         // Unity 2022.2+. On older versions use "Arial.ttf".
@@ -88,6 +93,7 @@ public class PieceManager : MonoBehaviour
         slides.Clear();
         foreach (var go in pieces.Values) Destroy(go);
         pieces.Clear();
+        OnCleared?.Invoke();
     }
 
     // ---------- Moves ----------
@@ -163,6 +169,8 @@ public class PieceManager : MonoBehaviour
 
     void Zap(GameObject victim, GameObject attacker)
     {
+        OnPieceCaptured?.Invoke(victim.name[0], victim.transform.position);
+
         // Capture pulse: shockwave + camera kick centred on the captured piece.
         // victim.name starts with the piece letter (e.g. "q_d8"), so a queen hits harder than a pawn.
         CapturePulse.Instance?.Play(victim.transform.position, CapturePulse.StrengthFor(victim.name[0]));
@@ -222,14 +230,22 @@ public class PieceManager : MonoBehaviour
 
     GameObject Spawn(char type, int file, int rank)
     {
-        var go = new GameObject();
-        go.transform.SetParent(transform);
+        var go = CreatePieceVisual(type, board.squareSize, 1); // 1 = draw above the squares
+        go.transform.SetParent(transform, false);
+        Place(go, type, "" + (char)('a' + file) + (char)('1' + rank));
+        return go;
+    }
+
+    // Builds a piece's look (sprite, or placeholder circle + letter) at the given size.
+    // Not placed on the board, so other scripts (e.g. CapturedPiecesDisplay) can use it too.
+    public GameObject CreatePieceVisual(char type, float size, int sortingOrder)
+    {
+        var go = new GameObject(type + "_visual");
 
         bool white = char.IsUpper(type);
-        float size = board.squareSize;
 
         var sr = go.AddComponent<SpriteRenderer>();
-        sr.sortingOrder = 1; // draw above the squares
+        sr.sortingOrder = sortingOrder;
 
         int i = Order.IndexOf(type);
         Sprite custom = (pieceSprites != null && i >= 0 && i < pieceSprites.Length) ? pieceSprites[i] : null;
@@ -245,14 +261,13 @@ public class PieceManager : MonoBehaviour
             sr.sprite = circleSprite;
             sr.color = white ? whiteColor : blackColor;
             go.transform.localScale = Vector3.one * size * 0.8f;
-            AddLabel(go, char.ToUpper(type).ToString(), white ? blackColor : whiteColor);
+            AddLabel(go, char.ToUpper(type).ToString(), white ? blackColor : whiteColor, sortingOrder + 1);
         }
 
-        Place(go, type, "" + (char)('a' + file) + (char)('1' + rank));
         return go;
     }
 
-    void AddLabel(GameObject parent, string text, Color color)
+    void AddLabel(GameObject parent, string text, Color color, int sortingOrder)
     {
         var label = new GameObject("Label");
         label.transform.SetParent(parent.transform, false);
@@ -269,7 +284,7 @@ public class PieceManager : MonoBehaviour
 
         var mr = label.GetComponent<MeshRenderer>();
         mr.material = font.material;
-        mr.sortingOrder = 2;
+        mr.sortingOrder = sortingOrder;
     }
 
     Sprite MakeCircleSprite(int res)

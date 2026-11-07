@@ -320,7 +320,7 @@ namespace PulseGambit.Settings
         static void EnsureEventSystem()
         {
 #if UNITY_2023_1_OR_NEWER
-            if (Object.FindFirstObjectByType<EventSystem>() != null) return;
+            if (Object.FindAnyObjectByType<EventSystem>() != null) return;
 #else
             if (Object.FindObjectOfType<EventSystem>() != null) return;
 #endif

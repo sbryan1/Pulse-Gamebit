@@ -87,7 +87,7 @@ public class CapturePulse : MonoBehaviour
         if (cameraTransform == null && Camera.main != null) cameraTransform = Camera.main.transform;
 
         // Pulse Gambit's board is always flat on the XY plane, facing the camera.
-        if (FindFirstObjectByType<BoardGenerator>() != null) boardNormal = Vector3.back;
+        if (FindAnyObjectByType<BoardGenerator>() != null) boardNormal = Vector3.back;
 
         // The 2D Renderer only lets objects on a LATER sorting layer read the board's screen copy.
         if (sortingLayerName == "Default" || SortingLayer.NameToID(sortingLayerName) == 0)

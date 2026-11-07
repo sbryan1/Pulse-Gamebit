@@ -14,6 +14,8 @@ public class BoardWave : MonoBehaviour
     [Range(20f, 80f)] public float fieldOfView = 42f;
     [Tooltip("Extra room around the board. Raise it if the board touches the screen edges.")]
     public float framing = 1.12f;
+    [Tooltip("Portrait only: room kept above and below the board for the captured pieces, in squares.")]
+    public float portraitTrayRoom = 1.4f;
 
     [Header("Wave")]
     [Tooltip("How high the crests rise toward the camera, in squares.")]
@@ -83,14 +85,19 @@ public class BoardWave : MonoBehaviour
         active = this;
     }
 
-    void OnDestroy() { if (active == this) active = null; }
+    void OnDestroy()
+    {
+        ScreenLayout.Changed -= SetupCamera;
+        if (active == this) active = null;
+    }
 
     void Start()
     {
         board = GetComponent<BoardGenerator>();
-        if (board == null) board = FindFirstObjectByType<BoardGenerator>();
-        pieces = FindFirstObjectByType<PieceManager>();
+        if (board == null) board = FindAnyObjectByType<BoardGenerator>();
+        pieces = FindAnyObjectByType<PieceManager>();
         SetupCamera();
+        ScreenLayout.Changed += SetupCamera; // re-fit when the phone rotates
     }
 
     void SetupCamera()
@@ -100,8 +107,24 @@ public class BoardWave : MonoBehaviour
 
         float s = board.squareSize;
         float halfBoard = 4f * s * framing;
-        float distance = halfBoard / Mathf.Tan(fieldOfView * 0.5f * Mathf.Deg2Rad) + amplitude * s;
         float t = tiltAngle * Mathf.Deg2Rad;
+        float tanV = Mathf.Tan(fieldOfView * 0.5f * Mathf.Deg2Rad);
+        float distance;
+
+        if (ScreenLayout.IsPortrait)
+        {
+            // Tall screen: the board's width is the tight fit. The near (bottom) edge of the
+            // tilted board is closer to the camera and looks wider, so allow for that too.
+            float tanH = tanV * Mathf.Max(0.01f, cam.aspect);
+            float fitWidth  = halfBoard / tanH + Mathf.Sin(t) * 4f * s;
+            float fitHeight = (4f + portraitTrayRoom) * s * framing / tanV;
+            distance = Mathf.Max(fitWidth, fitHeight) + amplitude * s;
+        }
+        else
+        {
+            // Wide screen: fit the board's height; captured pieces sit to the right.
+            distance = halfBoard / tanV + amplitude * s;
+        }
 
         // The camera sits below and in front of the board, looking at its center.
         cam.orthographic = false;

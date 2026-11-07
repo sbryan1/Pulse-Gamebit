@@ -13,7 +13,11 @@ public class BoardGenerator : MonoBehaviour
         squareSprite = MakeSquareSprite();
         BuildBoard();
         SetupCamera();
+        // Only needed without BoardWave (which sets up its own 3D camera).
+        if (GetComponent<BoardWave>() == null) ScreenLayout.Changed += SetupCamera;
     }
+
+    void OnDestroy() => ScreenLayout.Changed -= SetupCamera;
 
     void BuildBoard()
     {
@@ -71,7 +75,11 @@ public class BoardGenerator : MonoBehaviour
         var cam = Camera.main;
         if (cam == null) return;
         cam.orthographic = true;
-        cam.orthographicSize = 4.5f * squareSize;
+        // Fits the board plus room for captured pieces: beside it in landscape,
+        // above and below it in portrait.
+        cam.orthographicSize = ScreenLayout.IsPortrait
+            ? Mathf.Max(5.6f * squareSize, 4.5f * squareSize / Mathf.Max(0.01f, cam.aspect))
+            : 4.5f * squareSize;
         cam.transform.position = new Vector3(0, 0, -10);
         cam.clearFlags = CameraClearFlags.SolidColor;
         cam.backgroundColor = backgroundColor;

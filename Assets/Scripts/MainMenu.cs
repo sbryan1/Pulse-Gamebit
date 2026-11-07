@@ -47,6 +47,7 @@ public class MainMenu : MonoBehaviour
     Image sparkImage;
     float[] cumulative;
     float sparkDistance;
+    CanvasScaler scaler;
 
     // ---------- Build ----------
 
@@ -190,17 +191,37 @@ public class MainMenu : MonoBehaviour
         var canvas = go.GetComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
-        var scaler = go.GetComponent<CanvasScaler>();
+        scaler = go.GetComponent<CanvasScaler>();
         scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920, 1080);
         scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-        scaler.matchWidthOrHeight = 1f; // keep the full height on any screen
+        ApplyScale();
+        ScreenLayout.Changed += ApplyScale;
         return canvas;
+    }
+
+    void OnDestroy() => ScreenLayout.Changed -= ApplyScale;
+
+    // Landscape: the full 1920x1080 frame, keeping its full height on any screen.
+    // Portrait: the middle 900 units (logo and buttons) fill the screen's width;
+    // the pulse line simply runs off both sides.
+    void ApplyScale()
+    {
+        if (scaler == null) return;
+        if (ScreenLayout.IsPortrait)
+        {
+            scaler.referenceResolution = new Vector2(900, 1600);
+            scaler.matchWidthOrHeight = 0f;
+        }
+        else
+        {
+            scaler.referenceResolution = new Vector2(1920, 1080);
+            scaler.matchWidthOrHeight = 1f;
+        }
     }
 
     void EnsureEventSystem()
     {
-        if (FindFirstObjectByType<EventSystem>() != null) return;
+        if (FindAnyObjectByType<EventSystem>() != null) return;
         var go = new GameObject("EventSystem", typeof(EventSystem));
 #if ENABLE_INPUT_SYSTEM
         go.AddComponent<InputSystemUIInputModule>();

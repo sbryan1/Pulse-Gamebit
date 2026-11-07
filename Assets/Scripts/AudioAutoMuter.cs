@@ -55,7 +55,7 @@ namespace PulseGambit.Settings
             bool movesOn = GameAudioSettings.MoveSoundsOn;
 
 #if UNITY_2023_1_OR_NEWER
-            var sources = Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
+            var sources = Object.FindObjectsByType<AudioSource>();
 #else
             var sources = Object.FindObjectsOfType<AudioSource>();
 #endif

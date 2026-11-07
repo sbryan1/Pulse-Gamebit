@@ -45,10 +45,17 @@ public class AndroidExtractNativeLibs : IPostGenerateGradleAndroidProject
             Debug.Log("[Stockfish] Native library extraction enabled in " + module + "/build.gradle");
         }
 
-        // Same setting for Android App Bundles (.aab), used for the Play Store.
+        // App Bundles (.aab) are covered by useLegacyPackaging above. The old
+        // "android.bundle.enableUncompressedNativeLibs" property was removed in Android
+        // Gradle Plugin 8.1 and now makes the build fail, so strip it if an earlier
+        // version of this script added it.
         string props = Path.Combine(root, "gradle.properties");
-        if (File.Exists(props) && !File.ReadAllText(props).Contains("enableUncompressedNativeLibs"))
-            File.AppendAllText(props, "\nandroid.bundle.enableUncompressedNativeLibs=false\n");
+        if (File.Exists(props))
+        {
+            string p = File.ReadAllText(props);
+            string cleaned = Regex.Replace(p, @"^\s*android\.bundle\.enableUncompressedNativeLibs\s*=.*\r?\n?", "", RegexOptions.Multiline);
+            if (cleaned != p) File.WriteAllText(props, cleaned);
+        }
     }
 }
 #endif
