@@ -5,6 +5,7 @@ using UnityEngine;
 // Shows captured pieces in two trays, plus a "+N" material lead.
 //   Landscape: to the right of the board - bottom right for White, top right for Black.
 //   Portrait:  below the board for White, above the board for Black.
+//   (Swapped when the player is Black and the board is flipped.)
 // White's tray holds the black pieces White has captured, and the other way round.
 // Switches layout by itself when the phone rotates.
 // Captured pieces fly off the board into place and are sorted pawns -> queen.
@@ -175,6 +176,8 @@ public class CapturedPiecesDisplay : MonoBehaviour
     Vector3 Slot(bool whiteSide, int index)
     {
         float s = board.squareSize;
+        // The side at the bottom of the screen: White normally, Black when the board is flipped.
+        bool bottom = whiteSide != board.flipped;
 
         if (ScreenLayout.IsPortrait)
         {
@@ -185,7 +188,7 @@ public class CapturedPiecesDisplay : MonoBehaviour
             int rowP = index / perRowP;
             int colP = index % perRowP;
             float edge = 4f * s + portraitGapFromBoard * s + iconSize * s * 0.5f + rowP * rowSpacing * s;
-            return new Vector3(x0 + colP * spacing * s, whiteSide ? -edge : edge, -0.1f);
+            return new Vector3(x0 + colP * spacing * s, bottom ? -edge : edge, -0.1f);
         }
 
         float startX = 4f * s + gapFromBoard * s + iconSize * s * 0.5f; // board's right edge is at x = 4 squares
@@ -194,7 +197,7 @@ public class CapturedPiecesDisplay : MonoBehaviour
         int col = index % perRow;
 
         // White's tray starts level with rank 1 and grows upward; Black's starts at rank 8 and grows downward.
-        float y = whiteSide ? -3.5f * s + row * rowSpacing * s
+        float y = bottom ? -3.5f * s + row * rowSpacing * s
                             :  3.5f * s - row * rowSpacing * s;
         return new Vector3(startX + col * spacing * s, y, -0.1f);
     }

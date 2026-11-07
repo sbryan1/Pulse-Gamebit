@@ -3,11 +3,13 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 #if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 #endif
 
 // Builds the Pulse Gambit main menu from code: neon grid, glowing pulse line
 // with a spark that travels along it, the logo, and the menu buttons.
+// PLAY opens a submenu where the player picks White or Black.
 // Put this on an empty GameObject in a scene called "MainMenu".
 // Art is loaded from Assets/Resources/Menu/.
 public class MainMenu : MonoBehaviour
@@ -48,6 +50,8 @@ public class MainMenu : MonoBehaviour
     float[] cumulative;
     float sparkDistance;
     CanvasScaler scaler;
+    GameObject mainPage;   // PLAY / engine level / QUIT
+    GameObject sidePage;   // PLAY AS WHITE / PLAY AS BLACK / BACK
 
     // ---------- Build ----------
 
@@ -88,9 +92,18 @@ public class MainMenu : MonoBehaviour
         var frame = LoadSprite("Menu/ButtonFrame", new Vector4(50, 50, 50, 50));
         var size = new Vector2(560, 104);
 
-        MakeButton(art, frame, "PLAY", Cyan, new Vector2(0, -150), size, Play);
-        BuildLevelRow(art, frame, new Vector2(0, -270), size);
-        MakeButton(art, frame, "QUIT", Magenta, new Vector2(0, -390), size, Quit);
+        // Main page
+        mainPage = MakePage("MainPage", art);
+        MakeButton(mainPage.transform, frame, "Play Stockfish", Cyan, new Vector2(0, -150), size, ShowSidePage);
+        BuildLevelRow(mainPage.transform, frame, new Vector2(0, -270), size);
+        MakeButton(mainPage.transform, frame, "QUIT", Magenta, new Vector2(0, -390), size, Quit);
+
+        // Side picker submenu
+        sidePage = MakePage("SidePage", art);
+        MakeButton(sidePage.transform, frame, "PLAY AS WHITE", Cyan, new Vector2(0, -150), size, () => PlayAs(true));
+        MakeButton(sidePage.transform, frame, "PLAY AS BLACK", Magenta, new Vector2(0, -270), size, () => PlayAs(false));
+        MakeButton(sidePage.transform, frame, "BACK", Lavender, new Vector2(0, -390), size, ShowMainPage);
+        sidePage.SetActive(false);
 
         PreparePath();
     }
@@ -112,6 +125,24 @@ public class MainMenu : MonoBehaviour
     }
 
     // ---------- Actions ----------
+
+    void ShowSidePage()
+    {
+        mainPage.SetActive(false);
+        sidePage.SetActive(true);
+    }
+
+    void ShowMainPage()
+    {
+        sidePage.SetActive(false);
+        mainPage.SetActive(true);
+    }
+
+    void PlayAs(bool white)
+    {
+        GameSettings.PlayerIsWhite = white;
+        Play();
+    }
 
     void Play()
     {
@@ -152,6 +183,14 @@ public class MainMenu : MonoBehaviour
 
     void Update()
     {
+        // Esc (or Android's Back button) leaves the side picker.
+#if ENABLE_INPUT_SYSTEM
+        bool back = Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame;
+#else
+        bool back = Input.GetKeyDown(KeyCode.Escape);
+#endif
+        if (back && sidePage != null && sidePage.activeSelf) ShowMainPage();
+
         if (cumulative == null) return;
 
         // The pulse line breathes gently.
@@ -266,6 +305,15 @@ public class MainMenu : MonoBehaviour
 
         hit.gameObject.AddComponent<NeonButton>();
         MakeText(hit.transform, symbol, 48, Lavender);
+    }
+
+    // An empty full-frame container, so a whole page of buttons can be shown or hidden at once.
+    GameObject MakePage(string name, Transform parent)
+    {
+        var go = new GameObject(name, typeof(RectTransform));
+        go.transform.SetParent(parent, false);
+        Stretch(go.GetComponent<RectTransform>());
+        return go;
     }
 
     Text MakeText(Transform parent, string s, int size, Color color)

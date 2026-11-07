@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 #endif
 
-// Player (White) vs Stockfish (Black).
+// Player vs Stockfish. The player's side (White or Black) is picked in the main menu.
 // Click one of your pieces to see its legal moves, then click a highlighted square.
 // Pawns that reach the last rank become queens. Press Esc for the main menu.
 public class GameController : MonoBehaviour
@@ -32,7 +32,7 @@ public class GameController : MonoBehaviour
     [Range(0f, 1f)] public float volume = 0.8f;
     AudioSource audioSource;
 
-    const bool PlayerIsWhite = true;
+    bool PlayerIsWhite;
 
     static readonly Color Cyan     = new Color32(40, 240, 255, 255);
     static readonly Color Magenta  = new Color32(255, 40, 200, 255);
@@ -70,6 +70,7 @@ public class GameController : MonoBehaviour
         SetStatus("STARTING...", Lavender);
 
         skillLevel = GameSettings.SkillLevel;
+        PlayerIsWhite = GameSettings.PlayerIsWhite;
 
         squareSprite = MakeSquareSprite();
         dotSprite = MakeDotSprite(64);
@@ -82,6 +83,10 @@ public class GameController : MonoBehaviour
         // Captured pieces shown beside the board. Added automatically if not in the scene.
         if (FindAnyObjectByType<CapturedPiecesDisplay>() == null)
             gameObject.AddComponent<CapturedPiecesDisplay>();
+
+        // Same neon grid background as the main menu. Added automatically if not in the scene.
+        if (FindAnyObjectByType<MenuBackground>() == null)
+            gameObject.AddComponent<MenuBackground>();
 
         pieces.LoadFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
@@ -304,6 +309,7 @@ public class GameController : MonoBehaviour
         int file = Mathf.FloorToInt((w.x + 4f * s) / s);
         int rank = Mathf.FloorToInt((w.y + 4f * s) / s);
         if (file < 0 || file > 7 || rank < 0 || rank > 7) return null;
+        if (board.flipped) { file = 7 - file; rank = 7 - rank; } // Black at the bottom
         return "" + (char)('a' + file) + (char)('1' + rank);
     }
 

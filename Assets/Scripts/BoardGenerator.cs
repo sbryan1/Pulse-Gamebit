@@ -8,6 +8,14 @@ public class BoardGenerator : MonoBehaviour
     public Color backgroundColor = new Color32(8, 6, 26, 255); // deep neon navy
     Sprite squareSprite;
 
+    // True when the player is Black: the board is turned so Black sits at the bottom.
+    [HideInInspector] public bool flipped;
+
+    void Awake()
+    {
+        flipped = !GameSettings.PlayerIsWhite;
+    }
+
     void Start()
     {
         squareSprite = MakeSquareSprite();
@@ -40,9 +48,11 @@ public class BoardGenerator : MonoBehaviour
         }
     }
 
-    // Converts file/rank indices to a world position. White at the bottom.
+    // Converts file/rank indices to a world position.
+    // White at the bottom, or Black at the bottom when flipped.
     public Vector3 SquareToWorld(int file, int rank)
     {
+        if (flipped) { file = 7 - file; rank = 7 - rank; }
         float offset = 3.5f * squareSize;
         return new Vector3(file * squareSize - offset, rank * squareSize - offset, 0f);
     }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -41,6 +42,12 @@ namespace PulseGambit.Settings
         [Tooltip("Set Time.timeScale to 0 while open (restored on close).")]
         public bool pauseTimeWhileOpen = false;
 
+        [Header("Main Menu Button")]
+        [Tooltip("Show a MAIN MENU button next to BACK. It's hidden automatically in the main menu scene itself.")]
+        public bool showMainMenuButton = true;
+        [Tooltip("Name of the main menu scene, exactly as listed in Build Settings.")]
+        public string mainMenuSceneName = "MainMenu";
+
         public bool IsOpen { get; private set; }
 
         /// <summary>True while any settings menu is open. Check this in board input code
@@ -63,6 +70,23 @@ namespace PulseGambit.Settings
         public void Open() => SetOpen(true);
         public void Close() => SetOpen(false);
         public void Toggle() => SetOpen(!IsOpen);
+
+        /// <summary>Closes the menu and loads the main menu scene.</summary>
+        public void ReturnToMainMenu()
+        {
+            if (!Application.CanStreamedLevelBeLoaded(mainMenuSceneName))
+            {
+                Debug.LogError("Scene '" + mainMenuSceneName + "' isn't in Build Settings. " +
+                               "Add it in File > Build Settings, or fix Main Menu Scene Name on NeonSettingsMenu.");
+                return;
+            }
+            SetOpen(false); // restores Time.timeScale if the menu paused the game
+            SceneManager.LoadScene(mainMenuSceneName);
+        }
+
+        // In the main menu scene itself the button would do nothing, so it's left out there.
+        bool MainMenuButtonWanted =>
+            showMainMenuButton && SceneManager.GetActiveScene().name != mainMenuSceneName;
 
         // ---------- Lifecycle ----------
 
@@ -199,14 +223,28 @@ namespace PulseGambit.Settings
 
             Divider(panel, new Vector2(0, -140), 560, NeonUI.WithA(primary, 0.6f));
 
-            // Back button
-            var back = NeonUI.Rect("BackButton", panel, new Vector2(280, 76), new Vector2(0, -205));
-            NeonUI.GlowLayer(back, 38, NeonUI.WithA(accent, 0.35f));
-            var backFill = NeonUI.Layer(back, "Fill", NeonUI.Fill(38), Color.white);
-            NeonUI.HoverButton(backFill, accent, 0.06f, 0.28f, 0.45f).onClick.AddListener(Close);
-            NeonUI.Layer(back, "Border", NeonUI.Stroke(38, 3f), accent);
-            NeonUI.Label(back, "Label", "B A C K", font, 34, accent, TextAnchor.MiddleCenter,
-                new Vector2(280, 76), Vector2.zero);
+            // Bottom buttons: BACK alone, or BACK and MAIN MENU side by side.
+            if (MainMenuButtonWanted)
+            {
+                PanelButton(panel, "BackButton", "B A C K", new Vector2(-165, -205), accent, Close);
+                PanelButton(panel, "MainMenuButton", "M A I N  M E N U", new Vector2(165, -205), primary, ReturnToMainMenu);
+            }
+            else
+            {
+                PanelButton(panel, "BackButton", "B A C K", new Vector2(0, -205), accent, Close);
+            }
+        }
+
+        void PanelButton(RectTransform parent, string name, string label, Vector2 pos, Color color,
+                         UnityEngine.Events.UnityAction onClick)
+        {
+            var b = NeonUI.Rect(name, parent, new Vector2(300, 76), pos);
+            NeonUI.GlowLayer(b, 38, NeonUI.WithA(color, 0.35f));
+            var fill = NeonUI.Layer(b, "Fill", NeonUI.Fill(38), Color.white);
+            NeonUI.HoverButton(fill, color, 0.06f, 0.28f, 0.45f).onClick.AddListener(onClick);
+            NeonUI.Layer(b, "Border", NeonUI.Stroke(38, 3f), color);
+            NeonUI.Label(b, "Label", label, font, 28, color, TextAnchor.MiddleCenter,
+                new Vector2(300, 76), Vector2.zero);
         }
 
         void BuildCornerButton()

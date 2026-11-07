@@ -614,7 +614,7 @@ MonoBehaviour:
   lightColor: {r: 0.11764706, g: 0.11764706, b: 0.23529412, a: 1}
   darkColor: {r: 0.05490196, g: 0.05490196, b: 0.10980392, a: 1}
   squareSize: 1
-  backgroundColor: {r: 0.09803922, g: 0.09803922, b: 0.24705882, a: 1}
+  backgroundColor: {r: 0.03137255, g: 0.023529412, b: 0.10196079, a: 1}
 --- !u!114 &680681856
 MonoBehaviour:
   m_ObjectHideFlags: 0

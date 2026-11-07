@@ -116,3 +116,6 @@ InitTestScene*.unity*
 **/stockfish*
 **/stockfish*.meta
 *.meta
+
+# Old Unity caches moved aside, safe to delete
+/_to_delete/

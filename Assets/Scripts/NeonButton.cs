@@ -30,6 +30,14 @@ public class NeonButton : MonoBehaviour,
             frame.color = Color.Lerp(frame.color, hot ? color : Dim(), k);
     }
 
+    // A button hidden while hovered (e.g. switching menu pages) gets no exit event.
+    void OnDisable()
+    {
+        hovered = selected = false;
+        transform.localScale = Vector3.one;
+        if (frame != null) frame.color = Dim();
+    }
+
     Color Dim() => new Color(color.r, color.g, color.b, 0.7f);
 
     public void OnPointerEnter(PointerEventData e) => hovered = true;
